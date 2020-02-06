@@ -7,7 +7,7 @@ instance = ec2.create_instances(
     MaxCount=1,
     SecurityGroupIds=['sg-0990a25453de95f30'],
     KeyName='webserver_key',
-    TagSpecification=[
+    TagSpecifications=[
         {
             'ResourceType': 'instance',
              'Tags': [
