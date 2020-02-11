@@ -6,6 +6,11 @@ instance = ec2.create_instances(
     MinCount=1,
     MaxCount=1,
     SecurityGroupIds=['sg-0990a25453de95f30'],
+    UserData="""#!/bin/bash
+                yum update -y
+                yum install httpd -y
+                systemctl enable httpd
+                systemctl start httpd""",
     KeyName='webserver_key',
     TagSpecifications=[
         {
