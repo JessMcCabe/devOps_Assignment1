@@ -33,3 +33,8 @@ try:
   print (response)
 except Exception as error:
   print (error)
+
+# Build the URL of the Image in the newly created bucket
+# For the purpose of this program we save the image as the same name always
+image_url = "https://" + created_bucket + ".s3-eu-west-1.amazonaws.com/pic.jpg"
+
