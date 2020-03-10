@@ -2,6 +2,7 @@
 import sys
 import boto3
 import urllib.request
+import subprocess
 
 # Location to retrieve image from
 object_name = 'http://devops.witdemo.net/image.jpg'
@@ -38,3 +39,10 @@ except Exception as error:
 # For the purpose of this program we save the image as the same name always
 image_url = "https://" + created_bucket + ".s3-eu-west-1.amazonaws.com/pic.jpg"
 
+
+cmd4 = "echo '<br>Here is the image:<br> ' >>index.html"
+cmd5 = "echo '<img src="+ '"' + image_url + '"'+ ">' >>index.html"
+
+subprocess.run(cmd4, shell=True)
+
+subprocess.run(cmd5, shell=True)
