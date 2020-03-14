@@ -4,9 +4,14 @@
 import boto3
 import subprocess
 import time 
+import config as cfg
 
+# Create varaible to store paramteres provided in cofig file
 
-
+SecurityGroupIds = cfg.SecurityGroupIds
+KeyName= cfg.KeyName
+BucketName=cfg.BucketName
+PemKey=cfg.PemKey
 
 # Create new instance
 
@@ -18,13 +23,13 @@ try:
       ImageId='ami-0713f98de93617bb4',
       MinCount=1,
       MaxCount=1,
-      SecurityGroupIds=['sg-0990a25453de95f30'],
+      SecurityGroupIds=[SecurityGroupIds],
       UserData="""#!/bin/bash
                   yum update -y
                   yum install httpd -y
                   systemctl enable httpd
                   systemctl start httpd""",
-      KeyName='webserver_key',
+      KeyName=KeyName,
       TagSpecifications=[
           {
               'ResourceType': 'instance',
@@ -111,7 +116,7 @@ except:
 
 try:
   print("START Step: Create new bucket")
-  cmd = "./create_bucket.py assignment01-bucket1-$(date +%F-%s)"
+  cmd = "./create_bucket.py " + BucketName
   subprocess.run(cmd, shell=True)
 
   print("COMPLETE Step: Create new bucket")
@@ -165,7 +170,7 @@ print("Wait Complete")
 try:
   print("START Step: Secure Copy index.html to ec2 instance home")
 
-  cmd6 = "scp -o StrictHostKeyChecking=no -rp -i /home/jess/webserver_key.pem index.html ec2-user@" + myIP + ":"
+  cmd6 = "scp -o StrictHostKeyChecking=no -rp -i " + PemKey + " index.html ec2-user@" + myIP + ":"
   subprocess.run(cmd6, shell=True)
 
   print("COMPLETED Step: Secure Copy index.html to ec2 instance home")
@@ -173,7 +178,7 @@ try:
 
   print("START Step: SSH on to instance and copy index.html to /var/www/html/")
 
-  cmd7 = "ssh -t -o StrictHostKeyChecking=no -i /home/jess/webserver_key.pem ec2-user@" + myIP + " 'sudo cp index.html /var/www/html/'"
+  cmd7 = "ssh -t -o StrictHostKeyChecking=no -i " + PemKey + " ec2-user@" + myIP + " 'sudo cp index.html /var/www/html/'"
   subprocess.run(cmd7, shell=True)
 
   print("COMPLETED Step: SSH on to instance and copy index.html to /var/www/html/")
